@@ -76,25 +76,51 @@ class Solution2:
 class Solution3:
     def isMatch(self, s: str, p: str) -> bool:
         """
-        采用重叠子问题的解法来解决
+        采用动态规划的解法，先得找出状态转移方程
+        dp(i, j) 表示s的前i个字符与p的前j个字符串匹配是否匹配完全，值为False/True
+        那么需要从 dp(i-1, j-1) 和 s[i] 与 p[j] 来判断出 dp(i, j)
+        当 p[j] in ('.', s[i]) 时， dp(i, j) = dp(i-1, j-1) 
+        当 p[j] == '*' 时，
+            如果 p[j] 重复前面的字符 p[j-1] 0 次时，dp(i, j) = dp(i, j-2)
+            如果 p[j] 重复前面的字符 p[j-1] 1 次时，dp(i, j) = dp(i-1, j-1) and p[j-1] in ('.', s[i])
+        否则，dp(i, j) = False
         """
-        memo = dict()  # 备忘录
-        def dp(i, j):
-            if (i, j) in memo: return memo[(i, j)]
-            if j == len(p): return i == len(s)
-            
+        m = len(s)
+        n = len(p)
+        dp = dict()  # m * n 列矩阵，m表示字符串s的长度；n表示匹配串p的长度
+        dp[0, 0] = True
+        for i in range(1, m + 1): # 有s没有p的情况
+            dp[i, 0] = False
+        for j in range(1, n + 1): # 有p没有s的情况
+            if j == 1 or p[j - 1] != '*':
+                dp[0, j] = False
+            else:
+                dp[0, j] = dp[0, j - 2]
 
-
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if p[j - 1] in {'.', s[i - 1]}:
+                    dp[i, j] = dp[i - 1, j - 1]
+                elif j >= 2 and p[j - 1] == '*':
+                    # 匹配0次
+                    dp[i, j] = dp[i, j - 2]
+                    if not dp[i, j] and (p[j - 2] in {'.', s[i - 1]}):  # 匹配1次或者多次
+                        dp[i, j] = dp[i, j - 1] or dp[i - 1, j]
+                else:
+                    dp[i, j] = False
+        return dp[m, n]
 
 
 if __name__ == '__main__':
     test = [
-        ('aa', 'a'), # false
-        ('aa', 'a*'), # true
-        ('ab', '.*'), # ture
+        # ('aa', 'a'), # false
+        # ('aa', 'a*'), # true
+        # ('ab', '.*'), # ture
         ('aab', 'c*a*b'), # true
-        ('mississippi', 'mis*is*p*.') # false
+        # ('mississippi', 'mis*is*p*.'), # false
+        # ('aasdfasdfasdfasdfas', 'aasdf.*asdf.*asdf.*asdf.*s') # true
+        # ('fa', 'f.*a') # true
     ]
     for s, p in test:
-        result = Solution2().isMatch(s, p)
+        result = Solution3().isMatch(s, p)
         print(f's:{s} p:{p} isMatch ? {result} ')

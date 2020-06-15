@@ -85,8 +85,9 @@ class Solution2:
 class Solution3:
     """
     动态规划 -> 空间换时间
-    状态转移方程： P(i, j) = P(i+1, j-1) and s[i] == s[j]
-    其中 j - i + 1 > 3
+    状态转移方程： P(i, j) = s[i] == s[j] or (j - i < 3 or P(i+1, j-1))
+    其中 j - i < 3 表示s[i:j+1]的长度为2、3时，只需要比较s[i]是否等于s[j]即可，而i==j的情况，就肯定为True了
+    P(i, j) 表示字符串 s[i:j+1] 是否是回文字符串，值为 False / True
     表示判断的子串的长度如果不大于3的话，就没有校验这个子串的必要了
     在状态转移方程中，我们是从长度较短的字符串向长度较长的字符串进行转移
     """
@@ -98,7 +99,7 @@ class Solution3:
         
         for j in range(1, sLen):
             for i in range(j):
-                if j - i + 1 <= 3:
+                if j - i < 3:
                     dp[i][j] = s[i] == s[j]
                 else:
                     dp[i][j] = dp[i + 1][j - 1] and s[i] == s[j]
