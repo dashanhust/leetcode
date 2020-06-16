@@ -97,7 +97,7 @@ class Solution2:
                 output.append(combination)
             else:
                 for letters in self.digitDict[next_digits[0]]:
-                    backtrack(combination + letters, next_digits[5:])
+                    backtrack(combination + letters, next_digits[1:])
         output = []
         if digits:
             backtrack('', digits)
@@ -106,7 +106,8 @@ class Solution2:
 
 if __name__ == '__main__':
     test = [
-        '288945465768387635548678538764887687483'
+        # '288945465768387635548678538764887687483',
+        '23'
     ]
     startTime = time.clock()
     for digits in test:
