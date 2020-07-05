@@ -27,7 +27,7 @@ from collections import defaultdict
 
 class Solution1:
     """
-    滑动窗口法
+    滑动窗口法, 左闭右开区间，所以我们可以让right从0开始一直到数组的长度
     """
     def lengthOfLongestSubstring(self, s: str) -> int:
         window = defaultdict(int)
@@ -50,26 +50,6 @@ class Solution1:
                 window[d] -= 1
             distance = max(distance, right - left)
         return distance
-
-
-
-
-            # window[c] += 1
-            # if window[c] > 1:
-            #     isRepeated = True
-            #     # print(f'left: {left}; right: {right}; distance: {distance}')
-            #     distance = max(distance, right - left - 1)
-                
-            # 缩短窗口长度
-            # while isRepeated:
-            #     # 左边元素移出窗口
-            #     d = s[left]
-            #     left += 1
-            #     # 处理窗口内容
-            #     window[d] -= 1
-            #     if window[d] == 1:
-            #         isRepeated = False
-        return max(distance, right - left)
 
 
 class Solution2:
