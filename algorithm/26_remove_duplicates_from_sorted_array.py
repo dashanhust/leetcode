@@ -54,6 +54,22 @@ class Solution1:
         return ans + 1
 
 
+class Solution2:
+    """
+    双指针法：两个指针同时向前运行，慢的指针表示最后的答案，快的指针用于遍历完整个原始数组
+    """
+    def removeDuplicates(self, nums: List[int]) -> int:
+        if not nums: return 0
+
+        i = 0
+        lenNums = len(nums)
+        for j in range(1, lenNums):
+            if nums[i] != nums[j]:
+                i += 1
+                nums[i] = nums[j]
+        return i + 1
+
+
 if __name__ == "__main__":
     test = [
         [1, 1, 2], # 2
@@ -61,7 +77,7 @@ if __name__ == "__main__":
     ]
     start = time.perf_counter()
     for item in test:
-        result = Solution1().removeDuplicates(item)
+        result = Solution2().removeDuplicates(item)
         print(f'{item} => {result}')
     end = time.perf_counter()
     print(f'TimeCost: {end} - {start} = {end - start}')
